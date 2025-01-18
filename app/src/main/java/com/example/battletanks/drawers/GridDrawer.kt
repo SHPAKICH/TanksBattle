@@ -1,10 +1,12 @@
-package com.example.battletanks
+package com.example.battletanks.drawers
 
 
 import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.widget.FrameLayout
+import com.example.battletanks.CELL_SIZE
+import com.example.battletanks.binding
 
 class GridDrawer(private val context: Context) {
     private val allLines = mutableListOf<View>()
@@ -28,7 +30,7 @@ class GridDrawer(private val context: Context) {
     {
         var topMargin = 0
         while (topMargin <= container!!.height) {
-            val horizontalLine = View(context)
+            val horizontalLine = View(container.context)
             val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 1)
             topMargin += CELL_SIZE
             layoutParams.topMargin = topMargin
@@ -47,7 +49,7 @@ class GridDrawer(private val context: Context) {
         var leftMargin = 0
         while (leftMargin <= container!!.width)
         {
-            val verticalLine = View(context)
+            val verticalLine = View(container.context)
             val layoutParams = FrameLayout.LayoutParams(1, FrameLayout.LayoutParams.MATCH_PARENT)
             leftMargin += CELL_SIZE
             layoutParams.leftMargin = leftMargin
