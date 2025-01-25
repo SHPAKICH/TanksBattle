@@ -48,17 +48,6 @@ class ElementsDrawer(val container: FrameLayout) {
         }
 
 
-        private fun drawOrReplaceView(coordinate: Coordinate)
-        {
-    }
-
-
-
-
-    private fun drawOrReplaceView(coordinate: Coordinate)
-    {
-
-    }
 
     private fun replaceView(coordinate: Coordinate) {
         eraseView(coordinate)
