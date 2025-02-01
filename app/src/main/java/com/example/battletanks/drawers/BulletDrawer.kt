@@ -12,7 +12,7 @@ import com.example.battletanks.utils.checkViewCanMoveThroughBorder
 
 private const val BULLET_WIDTH = 15
 private const val BULLET_HEIGHT = 15
-
+//
 class BulletDrawer(val container: FrameLayout) {
 
     fun makeBulletMove(myTank: View, currentDirection: Direction) {
