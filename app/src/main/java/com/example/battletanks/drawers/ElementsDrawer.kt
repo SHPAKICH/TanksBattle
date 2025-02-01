@@ -12,6 +12,7 @@ import com.example.battletanks.enums.Direction
 import com.example.battletanks.enums.Material
 import com.example.battletanks.models.Coordinate
 import com.example.battletanks.models.Element
+import com.example.battletanks.utils.getElementByCoordinates
 import java.security.cert.CertificateEncodingException
 
 class ElementsDrawer(val container: FrameLayout) {
@@ -34,7 +35,7 @@ class ElementsDrawer(val container: FrameLayout) {
 
 
         private fun drawOrReplaceView(coordinate: Coordinate) {
-            val viewOnCoordinate = getElementByCoordinates(coordinate)
+            val viewOnCoordinate = getElementByCoordinates(coordinate, elementsOnContainer)
             if (viewOnCoordinate == null)
             {
                 drawView(coordinate)
@@ -58,7 +59,7 @@ class ElementsDrawer(val container: FrameLayout) {
     private fun eraseView(coordinate: Coordinate)
 
     {
-        val elementOnCoordinate = getElementByCoordinates(coordinate)
+        val elementOnCoordinate = getElementByCoordinates(coordinate, elementsOnContainer)
         if (elementOnCoordinate != null) {
             val erasingView = container.findViewById<View>(elementOnCoordinate.viewId)
             container.removeView(erasingView)
@@ -91,7 +92,5 @@ class ElementsDrawer(val container: FrameLayout) {
         elementsOnContainer.add(Element(viewId, currentMaterial, coordinate))
     }
 
-    private fun getElementByCoordinates(coordinate: Coordinate) =
-        elementsOnContainer.firstOrNull { it.coordinate == coordinate}
 
 }
