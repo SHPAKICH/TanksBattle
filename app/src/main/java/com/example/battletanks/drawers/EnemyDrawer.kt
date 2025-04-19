@@ -2,6 +2,7 @@ package com.example.battletanks.drawers
 
 import android.widget.FrameLayout
 import com.example.battletanks.CELL_SIZE
+import com.example.battletanks.GameCore.isPlaying
 import com.example.battletanks.binding
 import com.example.battletanks.enums.CELLS_TANKS_SIZE
 import com.example.battletanks.enums.Direction
@@ -21,6 +22,7 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
     private var currentCoordinate: Coordinate
     val tanks = mutableListOf<Tank>()
     lateinit var bulletDrawer: BulletDrawer
+    private var gameStarted = false
 
     init {
         respawnList = getRespawnList()
@@ -29,7 +31,7 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
 
     private fun getRespawnList(): List<Coordinate> {
         val respawnList = mutableListOf<Coordinate>()
-        respawnList.add(Coordinate(0,0))
+        respawnList.add(Coordinate(0, 0))
         respawnList.add(
             Coordinate(
                 0,
@@ -68,6 +70,9 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
     fun moveEnemyTanks() {
         Thread(Runnable {
             while (true) {
+                if (!isPlaying()) {
+                    continue
+                }
                 goThroughAllTanks()
                 Thread.sleep(400)
             }
@@ -75,30 +80,36 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
     }
 
     private fun goThroughAllTanks() {
-            tanks.toList().forEach {
-                it.move(container, it.direction, elements)
-                if (checkIfChanceBiggerThanRandom(10)){
-                    bulletDrawer.addNewBulletForTank(it)
-                }
+        tanks.toList().forEach {
+            it.move(container, it.direction, elements)
+            if (checkIfChanceBiggerThanRandom(10)) {
+                bulletDrawer.addNewBulletForTank(it)
             }
         }
-
     }
 
+
     fun startEnemyCreation() {
-        Thread(Runnable{
+        if (gameStarted) {
+            return
+        }
+        gameStarted = true
+        Thread(Runnable {
             while (enemyAmount < MAX_ENEMY_AMOUNT) {
+                if (!isPlaying()) {
+                    continue
+                }
                 drawEnemy()
                 enemyAmount++
                 Thread.sleep(3000)
             }
         }).start()
+        moveEnemyTanks()
     }
 
     fun removeTank(tankIndex: Int) {
         if (tankIndex < 0) return
         tanks.removeAt(tankIndex)
     }
-
 
 }

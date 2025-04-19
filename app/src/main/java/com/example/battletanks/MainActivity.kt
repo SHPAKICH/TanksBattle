@@ -1,5 +1,6 @@
 package com.example.battletanks
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
@@ -9,8 +10,11 @@ import android.view.MenuItem
 import android.view.View.*
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginLeft
 import androidx.core.view.marginTop
+import com.example.battletanks.GameCore.isPlaying
+import com.example.battletanks.GameCore.startOrPauseTheGame
 import com.example.battletanks.enums.Direction.UP
 import com.example.battletanks.enums.Direction.DOWN
 import com.example.battletanks.enums.Direction.LEFT
@@ -26,6 +30,7 @@ import com.example.battletanks.models.Coordinate
 import com.example.battletanks.models.Element
 import com.example.battletanks.models.Tank
 
+
 const val CELL_SIZE = 50
 
 lateinit var binding: ActivityMainBinding
@@ -33,6 +38,7 @@ lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var editMode = false
+    private lateinit var item: MenuItem
 
     private lateinit var playerTank: Tank
     private lateinit var eagle : Element
@@ -163,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.settings, menu)
+        item = menu!!.findItem(R.id.menu_play)
         return true
     }
 
@@ -181,22 +188,40 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.menu_play -> {
-                startTheGame()
-                return true
+                if (editMode) {
+                    return true
+                }
+                startOrPauseTheGame()
+                if (isPlaying()) {
+                    startTheGame()
+                } else {
+                    pauseTheGame()
+                }
+                true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun startTheGame() {
-        if (editMode) {
-            return
-        }
+        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_pause)
         enemyDrawer.startEnemyCreation()
-        enemyDrawer.moveEnemyTanks()
+    }
+
+    private fun pauseTheGame() {
+        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_play)
+        GameCore.pauseTheGame()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pauseTheGame()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (!isPlaying()) {
+            return super.onKeyDown(keyCode, event)
+        }
         when (keyCode) {
             KEYCODE_DPAD_UP -> move(UP)
             KEYCODE_DPAD_DOWN -> move(DOWN)
@@ -211,4 +236,5 @@ class MainActivity : AppCompatActivity() {
         playerTank.move(binding.container, direction, elementsDrawer.elementsOnContainer)
     }
 }
+
 
