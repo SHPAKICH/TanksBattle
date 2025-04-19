@@ -17,6 +17,7 @@ import com.example.battletanks.enums.Direction.RIGHT
 import com.example.battletanks.databinding.ActivityMainBinding
 import com.example.battletanks.drawers.BulletDrawer
 import com.example.battletanks.drawers.ElementsDrawer
+import com.example.battletanks.drawers.EnemyDrawer
 import com.example.battletanks.drawers.GridDrawer
 import com.example.battletanks.drawers.TankDrawer
 import com.example.battletanks.enums.Direction
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity() {
 
     private val levelStorage by lazy {
         LevelStorage(this)
+    }
+
+    private val enemyDrawer by lazy {
+        EnemyDrawer(binding.container)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,13 +86,13 @@ class MainActivity : AppCompatActivity() {
     private fun showSettings() {
         gridDrawer.drawGrid()
         binding.materialsContainer.visibility = VISIBLE
-        elementsDrawer.changeElementsVisibility(true)
+
     }
 
     private fun hideSettings() {
         gridDrawer.removeGrid()
         binding.materialsContainer.visibility = GONE
-        elementsDrawer.changeElementsVisibility(false)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
