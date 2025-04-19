@@ -20,7 +20,6 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
     private var enemyAmount = 0
     private var currentCoordinate: Coordinate
     val tanks = mutableListOf<Tank>()
-    private var moveAllTanksThread: Thread? = null
     lateinit var bulletDrawer: BulletDrawer
 
     init {
@@ -76,15 +75,14 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
     }
 
     private fun goThroughAllTanks() {
-        moveAllTanksThread = Thread(Runnable {
-            tanks.forEach {
+            tanks.toList().forEach {
                 it.move(container, it.direction, elements)
                 if (checkIfChanceBiggerThanRandom(10)){
                     bulletDrawer.addNewBulletForTank(it)
                 }
             }
-        })
-        moveAllTanksThread?.start()
+        }
+
     }
 
     fun startEnemyCreation() {
@@ -99,7 +97,6 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
 
     fun removeTank(tankIndex: Int) {
         if (tankIndex < 0) return
-        moveAllTanksThread?.join()
         tanks.removeAt(tankIndex)
     }
 
