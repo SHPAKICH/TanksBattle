@@ -19,9 +19,10 @@ import com.example.battletanks.drawers.BulletDrawer
 import com.example.battletanks.drawers.ElementsDrawer
 import com.example.battletanks.drawers.EnemyDrawer
 import com.example.battletanks.drawers.GridDrawer
-import com.example.battletanks.drawers.TankDrawer
 import com.example.battletanks.enums.Direction
 import com.example.battletanks.enums.Material
+import com.example.battletanks.models.Coordinate
+import com.example.battletanks.models.Element
 
 const val CELL_SIZE = 50
 
@@ -30,16 +31,21 @@ lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var editMode = false
+    private val playerTank = Tank(
+        Element(
+            R.id.myTank,
+            Material.PLAYER_TANK,
+            Coordinate(0,0)
+            PLAYER_TANK.width,
+            PLAYER_TANK.height
+        ), UP
+    )
     private val gridDrawer by lazy {
         GridDrawer(this)
     }
 
     private val elementsDrawer by lazy{
         ElementsDrawer(binding.container)
-    }
-
-    private val tankDrawer by lazy {
-        TankDrawer(binding.container)
     }
 
     private val bulletDrawer by lazy {
@@ -72,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
         elementsDrawer.drawElementsList(levelStorage.loadLevel())
         hideSettings()
+        elementsDrawer.elementsOnContainer.add(playerTank.element)
     }
 
     private fun switchEditMode() {
@@ -131,46 +138,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
-            KEYCODE_DPAD_UP -> tankDrawer.move(binding.myTank, UP, elementsDrawer.elementsOnContainer)
-            KEYCODE_DPAD_DOWN -> tankDrawer.move(binding.myTank, DOWN, elementsDrawer.elementsOnContainer)
-            KEYCODE_DPAD_LEFT -> tankDrawer.move(binding.myTank, LEFT, elementsDrawer.elementsOnContainer)
-            KEYCODE_DPAD_RIGHT -> tankDrawer.move(binding.myTank, RIGHT, elementsDrawer.elementsOnContainer)
-            KEYCODE_SPACE -> bulletDrawer.makeBulletMove(binding.myTank, tankDrawer.currentDirection, elementsDrawer.elementsOnContainer)
+            KEYCODE_DPAD_UP -> move(UP)
+            KEYCODE_DPAD_DOWN -> move(DOWN)
+            KEYCODE_DPAD_LEFT -> move(LEFT)
+            KEYCODE_DPAD_RIGHT -> move(RIGHT)
+            KEYCODE_SPACE -> bulletDrawer.makeBulletMove(
+                binding.myTank,
+                playerTank.direction,
+                elementsDrawer.elementsOnContainer)
         }
         return super.onKeyDown(keyCode, event)
     }
 
     private fun move(direction: Direction) {
-        when(direction){
-            UP->{
-                binding.myTank.rotation = 0f
-                if (binding.myTank.marginTop > 0) {
-                    (binding.myTank.layoutParams as FrameLayout.LayoutParams).topMargin += -CELL_SIZE
-                }
-            }
-
-            DOWN->{
-                binding.myTank.rotation = 180f
-                if (binding.myTank.marginTop + binding.myTank.height < binding.container.height / CELL_SIZE * CELL_SIZE) {
-                    (binding.myTank.layoutParams as FrameLayout.LayoutParams).topMargin += -CELL_SIZE
-                }
-            }
-
-            LEFT->{
-                binding.myTank.rotation = 270f
-                if (binding.myTank.marginLeft > 0) {
-                    (binding.myTank.layoutParams as FrameLayout.LayoutParams).leftMargin += -CELL_SIZE
-                }
-            }
-
-            RIGHT->{
-                binding.myTank.rotation = 90f
-                if (binding.myTank.marginLeft + binding.myTank.width < binding.container.width / CELL_SIZE * CELL_SIZE) {
-                    (binding.myTank.layoutParams as FrameLayout.LayoutParams).leftMargin += -CELL_SIZE
-                }
-            }
-        }
-        binding.container.removeView(binding.myTank)
-        binding.container.addView(binding.myTank)
+        playerTank.move(direction, binding.container, elementsDrawer.elementsOnContainer)
     }
 }

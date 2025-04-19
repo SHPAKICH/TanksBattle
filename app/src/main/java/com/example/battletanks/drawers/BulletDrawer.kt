@@ -15,7 +15,7 @@ import com.example.battletanks.utils.getElementByCoordinates
 private const val BULLET_WIDTH = 15
 private const val BULLET_HEIGHT = 15
 //
-class BulletDrawer(val container: FrameLayout) {
+class BulletDrawer(private val container: FrameLayout) {
 
     private var canBulletGoFurther = true
     private var bulletThread: Thread? = null
@@ -48,12 +48,12 @@ class BulletDrawer(val container: FrameLayout) {
                         Coordinate(
                             (bullet.layoutParams as FrameLayout.LayoutParams).topMargin,
                             (bullet.layoutParams as FrameLayout.LayoutParams).leftMargin))
-                    (container.context as Activity).runOnUiThread {
+                    container.runOnUiThread {
                         container.removeView(bullet)
                         container.addView(bullet)
                     }
                 }
-                (container.context as Activity).runOnUiThread {
+                container.runOnUiThread {
                     container.removeView(bullet)
                 }
             })
@@ -112,9 +112,7 @@ class BulletDrawer(val container: FrameLayout) {
     private fun removeView(element: Element?) {
         val activity = container.context as Activity
         activity.runOnUiThread {
-            if (element != null) {
             container.removeView(activity.findViewById(element.viewId))
-            }
         }
     }
 

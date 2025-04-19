@@ -3,6 +3,7 @@ package com.example.battletanks.drawers
 import android.widget.FrameLayout
 import com.example.battletanks.CELL_SIZE
 import com.example.battletanks.enums.CELLS_TANKS_SIZE
+import com.example.battletanks.enums.Material
 import com.example.battletanks.models.Coordinate
 import com.example.battletanks.models.Element
 import com.example.battletanks.utils.drawElement
@@ -48,10 +49,10 @@ class EnemyDrawer(private val container: FrameLayout) {
 
         currentCoordinate = respawnList[index]
         val enemyTankElement = Element(
-            material = ENEMY_TANK,
+            material = Material.ENEMY_TANK,
             coordinate = currentCoordinate,
-            width = ENEMY_TANK.width,
-            height = ENEMY_TANK.height
+            width = Material.ENEMY_TANK.width,
+            height = Material.ENEMY_TANK.height
         )
         enemyTankElement.drawElement(container)
         elements.add(enemyTankElement)
