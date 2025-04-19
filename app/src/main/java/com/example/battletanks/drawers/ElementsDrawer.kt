@@ -55,7 +55,7 @@ class ElementsDrawer(val container: FrameLayout) {
         }
         for (element in elements) {
             currentMaterial = element.material
-            drawView((element.coordinate))
+            drawElement(element)
         }
     }
 
@@ -63,7 +63,7 @@ class ElementsDrawer(val container: FrameLayout) {
 
     private fun replaceView(coordinate: Coordinate) {
         eraseView(coordinate)
-        drawView(coordinate)
+        createElementDrawView(coordinate)
     }
 
 
@@ -111,16 +111,18 @@ class ElementsDrawer(val container: FrameLayout) {
         }
     }
 
-    private fun drawView(coordinate: Coordinate) {
+    private fun drawElement(element: Element) {
         removeUnwantedInstances()
+        element.drawElement(container)
+        elementsOnContainer.add(element)
+    }
+
+    private fun createElementDrawView(coordinate: Coordinate) {
         val element = Element(
             material = currentMaterial,
             coordinate = coordinate,
-            width = currentMaterial.width,
-            height = currentMaterial.height
         )
-        element.drawElement(container)
-        elementsOnContainer.add(element)
+        drawElement(element)
     }
 
 }

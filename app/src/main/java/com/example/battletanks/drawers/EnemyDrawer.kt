@@ -71,8 +71,6 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
             Element(
                 material = Material.ENEMY_TANK,
                 coordinate = currentCoordinate,
-                width = Material.ENEMY_TANK.width,
-                height = Material.ENEMY_TANK.height
             ), Direction.DOWN
         )
         enemyTank.element.drawElement(container)
