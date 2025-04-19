@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideSettings() {
         gridDrawer.removeGrid()
-        binding.materialsContainer.visibility = GONE
+        binding.materialsContainer.visibility = INVISIBLE
 
     }
 
@@ -113,8 +113,20 @@ class MainActivity : AppCompatActivity() {
                 levelStorage.saveLevel(elementsDrawer.elementsOnContainer)
                 return true
             }
+
+            R.id.menu_play -> {
+                startTheGame()
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun startTheGame() {
+        if (editMode) {
+            return
+        }
+        enemyDrawer.startEnemyDrawing(elementsDrawer.elementsOnContainer)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
