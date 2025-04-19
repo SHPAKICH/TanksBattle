@@ -39,7 +39,7 @@ class ElementsDrawer(val container: FrameLayout) {
             val viewOnCoordinate = getElementByCoordinates(coordinate, elementsOnContainer)
             if (viewOnCoordinate == null)
             {
-                drawView(coordinate)
+                createElementDrawView(coordinate)
                 return
             }
 

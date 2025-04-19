@@ -58,7 +58,7 @@ class Tank constructor(
 
     private fun changeDirectionForEnemyTank() {
         if (element.material == Material.ENEMY_TANK) {
-            val randomDirection = Direction.entries[Random.nextInt(Direction.entries.size)]
+            val randomDirection = Direction.values()[Random.nextInt(Direction.values().size)]
             this.direction = randomDirection
         }
     }

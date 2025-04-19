@@ -7,6 +7,7 @@ import android.widget.ImageView
 import com.example.battletanks.CELL_SIZE
 import com.example.battletanks.GameCore.isPlaying
 import com.example.battletanks.R
+import com.example.battletanks.SoundManager
 import com.example.battletanks.enums.Direction
 import com.example.battletanks.enums.Material
 import com.example.battletanks.models.Bullet
@@ -24,7 +25,7 @@ private const val BULLET_HEIGHT = 15
 //
 class BulletDrawer(
     private val container: FrameLayout,
-    private val element:MutableList<Element>,
+    private val elements:MutableList<Element>,
     private val enemyDrawer: EnemyDrawer
 ) {
 
@@ -38,6 +39,7 @@ class BulletDrawer(
         val view = container.findViewById<View>(tank.element.viewId) ?: return
         if (tank.alreadyHasBullet()) return
         allBullets.add(Bullet(createBullet(view, tank.direction), tank.direction, tank))
+        SoundManager.bulletShot()
     }
 
     private fun Tank.alreadyHasBullet(): Boolean =
@@ -128,17 +130,17 @@ class BulletDrawer(
 
     private fun removeElementsAndStopBullet(element: Element?, bullet: Bullet) {
         if (element != null) {
-            if (element.material.bulletCanGoThrough){
+            if (element.material.bulletCanGoThrough) {
                 return
             }
             if (bullet.tank.element.material == Material.ENEMY_TANK && element.material == Material.ENEMY_TANK) {
                 stopBullet(bullet)
                 return
             }
-            if  (element.material.simpleBulletCanDestroy){
+            if (element.material.simpleBulletCanDestroy) {
                 stopBullet(bullet)
                 removeView(element)
-                elements.remove(element)
+                elements.remove(element) // Change to 'elements.remove(element)'
                 removeTank(element)
             } else {
                 stopBullet(bullet)
@@ -149,6 +151,8 @@ class BulletDrawer(
     private fun removeTank(element: Element) {
         val tanksElements = enemyDrawer.tanks.map { it.element }
         val tankIndex = tanksElements.indexOf(element)
+        if (tankIndex < 0) return
+        SoundManager.bulletBurst()
         enemyDrawer.removeTank(tankIndex)
     }
 
@@ -157,9 +161,11 @@ class BulletDrawer(
     }
 
     private fun removeView(element: Element?) {
-        val activity = container.context as Activity
-        activity.runOnUiThread {
-            container.removeView(activity.findViewById(element.viewId))
+        if (element != null) { // Check for null explicitly
+            val activity = container.context as Activity
+            activity.runOnUiThread {
+                container.removeView(activity.findViewById(element.viewId))
+            }
         }
     }
 
