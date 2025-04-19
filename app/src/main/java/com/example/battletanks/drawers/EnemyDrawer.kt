@@ -71,7 +71,8 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
             Element(
                 material = Material.ENEMY_TANK,
                 coordinate = currentCoordinate,
-            ), Direction.DOWN
+            ), Direction.DOWN,
+            BulletDrawer(container)
         )
         enemyTank.element.drawElement(container)
         elements.add(enemyTank.element)
@@ -83,7 +84,8 @@ class EnemyDrawer(private val container: FrameLayout, private val elements: Muta
             while (true) {
                 removeInconsistentTanks()
                 tanks.forEach {
-                    it.move(it.direction, container, elements)
+                    it.move(container, it.direction, elements)
+                    it.bulletDrawer.makeBulletMove(it, elements)
                 }
                 Thread.sleep(400)
             }
