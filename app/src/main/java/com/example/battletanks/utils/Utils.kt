@@ -70,3 +70,10 @@ fun checkIfChanceBiggerThanRandom(percentChance: Int): Boolean {
 fun getTankByCoordinates(coordinate: Coordinate, tankList: List<Tank>): Element? {
     return getElementByCoordinates(coordinate, tankList.map { it.element })
 }
+
+fun View.getViewCoordinate(): Coordinate {
+    return Coordinate(
+        (this.layoutParams as FrameLayout.LayoutParams).topMargin,
+        (this.layoutParams as FrameLayout.LayoutParams).leftMargin
+    )
+}
